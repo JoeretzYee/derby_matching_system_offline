@@ -33,15 +33,25 @@ class ToprankEntries(models.Model):
         return self.entry_name
     
 class ExcludedEntries(models.Model):
-    event_id = models.ForeignKey(Event, on_delete=models.CASCADE)
+    event_id = models.ForeignKey(Event,on_delete=models.CASCADE)
     excluded = models.JSONField(default=list)
 
+    def __self__(self):
+        return self.event_id.id
+    
+class Match(models.Model):
+    event_id = models.ForeignKey(Event,on_delete=models.CASCADE,null=True)
+    fight_number = models.IntegerField()
+    entry_name = models.CharField(max_length=100)
+    owner_name = models.CharField(max_length=100)
+    chicken_name = models.CharField(max_length=100)
+    weight = models.FloatField(null=True)
+    # Matched opponent fields
+    matched_entry_name = models.CharField(max_length=100)
+    matched_owner_name = models.CharField(max_length=100)
+    matched_chicken_name = models.CharField(max_length=100)
+    matched_weight = models.FloatField(null=True)
+
     def __str__(self):
-        if len(self.excluded) >= 1 and isinstance(self.excluded[0], dict):
-            entry1 = self.excluded[0].get('entry1', 'N/A')
-            entry2 = self.excluded[0].get('entry2', 'N/A')
-            return f"Excluded Entries: {entry1} - {entry2}"
-        return "Excluded Entries: Insufficient or invalid data"
-
-
+        return f"{self.entry_name}-{self.matched_entry_name}"
 

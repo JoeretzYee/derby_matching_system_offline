@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import axiosInstance from "../axios";
+import { useStateValue } from "../StateProvider";
+import reducer, { initialState, actionTypes } from "../reducer";
 
 function AddEntryModal({
   show,
@@ -11,6 +13,7 @@ function AddEntryModal({
   bullstag,
   cock,
 }) {
+  const [{ entries, toprankEntries, eventDetail }, dispatch] = useStateValue();
   const [chickenEntries, setChickenEntries] = useState([]); // For multiple chicken entries
   const [currentChickenName, setCurrentChickenName] = useState(""); // For the current chicken name input
   const [currentWeight, setCurrentWeight] = useState(""); // For the current weight input
@@ -115,8 +118,8 @@ function AddEntryModal({
       try {
         // Fetch data from /entries and /topranks APIs
         const [entriesResponse, topranksResponse] = await Promise.all([
-          axiosInstance.get("/entries"),
-          axiosInstance.get("/topranks"),
+          axiosInstance.get(`/entries/?event_id=${eventDetail.id}`),
+          axiosInstance.get(`/topranks/?event_id=${eventDetail.id}`),
         ]);
 
         // Parse the JSON response

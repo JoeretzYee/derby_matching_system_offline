@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import Select from "react-select";
-import Swal from "sweetalert2";
+import React, { useEffect, useState, useReducer, useCallback } from "react";
+import { useParams, Link } from "react-router-dom";
 import axiosInstance from "../axios";
-import { actionTypes } from "../reducer";
-import { useStateValue } from "../StateProvider";
+import Select from "react-select";
+import reducer, { initialState, actionTypes } from "../reducer";
 import AddEntryModal from "./AddEntryModal";
+import Swal from "sweetalert2";
 import TabsList from "./TabsList";
+import { useStateValue } from "../StateProvider";
 
 function EventList() {
   const { eventId } = useParams();
@@ -37,14 +37,19 @@ function EventList() {
   const entryOptionss = async () => {
     try {
       // Fetch entries from the `/entries` endpoint
-      const entriesResponse = await axiosInstance.get("/entries");
+      const entriesResponse = await axiosInstance.get(
+        `/entries/?event_id=${eventId}`
+      );
+      console.log(`Entries entry options: ${entriesResponse}`);
       const entriesData = entriesResponse.data.map((entry) => ({
         value: entry.entry_name,
         label: entry.entry_name,
       }));
 
       // Fetch entries from the `/topranks` endpoint
-      const toprankResponse = await axiosInstance.get("/topranks");
+      const toprankResponse = await axiosInstance.get(
+        `/topranks/?event_id=${eventId}`
+      );
       const toprankData = toprankResponse.data.map((toprank) => ({
         value: toprank.entry_name, // Assuming `entry_name` is the property you want to use
         label: toprank.entry_name,

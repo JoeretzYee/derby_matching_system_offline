@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
-from .models import Event,Entries,ToprankEntries,ExcludedEntries
-from .serializers import EventSerializer,EntriesSerializer,ToprankSerializer,ExcludedEntriesSerializer
+from .models import Event,Entries,ToprankEntries,ExcludedEntries,Match
+from .serializers import EventSerializer,EntriesSerializer,ToprankSerializer,ExcludedEntriesSerializer,MatchSerializer
 from rest_framework.decorators import action 
 from rest_framework import status
 
@@ -229,7 +229,7 @@ class ExcludedEntriesViewSet(viewsets.ViewSet):
         serializer = ExcludedEntriesSerializer(entries, many=True)
         return Response(serializer.data)
 
-    # Retrieve a single toprank entry
+    # Retrieve a single exluded entry
     def retrieve(self, request, pk=None):
         try:
             entry = ExcludedEntries.objects.get(pk=pk)
@@ -269,3 +269,8 @@ class ExcludedEntriesViewSet(viewsets.ViewSet):
 
         entry.delete()
         return Response({"detail": "Deleted successfully"}, status=204)
+    
+
+class MatchViewSet(viewsets.ModelViewSet):
+    queryset = Match.objects.all()
+    serializer_class = MatchSerializer

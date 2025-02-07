@@ -1,4 +1,4 @@
-from .models import Event,Entries,ToprankEntries,ExcludedEntries
+from .models import Event,Entries,ToprankEntries,ExcludedEntries,Match
 from rest_framework import serializers
 
 class EventSerializer(serializers.ModelSerializer):
@@ -22,5 +22,11 @@ class ToprankSerializer(serializers.ModelSerializer):
 class ExcludedEntriesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExcludedEntries
+        fields = '__all__'
+
+
+class MatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Match
         fields = '__all__'
         
